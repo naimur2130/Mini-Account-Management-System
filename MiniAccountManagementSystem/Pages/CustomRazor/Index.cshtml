@@ -1,0 +1,27 @@
+﻿@page
+@model MiniAccountManagementSystem.Pages.CustomRazor.IndexModel
+@{
+    ViewData["Title"] = "List of User";
+}
+
+<h2> User List </h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var i in Model.Users)
+        {
+            <tr>
+                <td>@i.Email</td>
+                <td>
+                    <a asp-page="EditRoles" asp-route-id="@i.Id">Edit Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

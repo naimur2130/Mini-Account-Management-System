@@ -1,0 +1,21 @@
+﻿@page "{id?}"
+@model MiniAccountManagementSystem.Pages.CustomRazor.EditRolesModel
+@{
+    ViewData["Title"] = "Edit User Roles";
+}
+
+<h2>Edit Roles for @Model.User.Email</h2>
+
+<form method="post">
+    @foreach (var role in Model.Roles)
+    {
+        <div>
+            <input type="checkbox" name="selectedRoles" value="@role"
+            @(Model.UserRoles.Contains(role) ? "checked" : "") />
+            <label>@role</label>
+        </div>
+    }
+
+    <input type="hidden" name="id" value="@Model.User.Id" />
+    <button type="submit">Save</button>
+</form>
