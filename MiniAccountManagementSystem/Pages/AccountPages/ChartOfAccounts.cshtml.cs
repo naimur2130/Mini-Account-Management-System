@@ -29,6 +29,10 @@ namespace MiniAccountManagementSystem.Pages.AccountPages
         [BindProperty]
         public string AccountType { get; set; }
 
+        [BindProperty]
+        public int? EditAccountId { get; set; }
+
+
         public List<AccountItem> ExistingAccounts { get; set; } = new List<AccountItem>();
         public List<AccountItem> AllAccounts { get; set; } = new List<AccountItem>();
 
@@ -42,7 +46,7 @@ namespace MiniAccountManagementSystem.Pages.AccountPages
         }
 
         // Load all accounts for display & also load ExistingAccounts for dropdown
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? editId)
         {
             await LoadAccountsAsync();
 
@@ -51,6 +55,19 @@ namespace MiniAccountManagementSystem.Pages.AccountPages
                 AccountId = a.AccountId,
                 AccountName = a.AccountName
             }).ToList();
+
+            if (editId.HasValue)
+            {
+                var acc = AllAccounts.FirstOrDefault(a => a.AccountId == editId.Value);
+                if (acc != null)
+                {
+                    EditAccountId = acc.AccountId;
+                    AccountName = acc.AccountName;
+                    ParentAccountId = acc.ParentAccountId;
+                    AccountType = acc.AccountType;
+                }
+            }
+
         }
 
         private async Task LoadAccountsAsync()
@@ -69,7 +86,7 @@ namespace MiniAccountManagementSystem.Pages.AccountPages
                         AccountId = reader.GetInt32(0),
                         AccountName = reader.GetString(1),
                         ParentAccountId = reader.IsDBNull(2) ? (int?)null : reader.GetInt32(2),
-                        AccountType = reader.GetString(3)
+                        AccountType = reader.IsDBNull(3) ? null : reader.GetString(3)
                     });
                 }
             }
@@ -92,5 +109,42 @@ namespace MiniAccountManagementSystem.Pages.AccountPages
 
             return RedirectToPage("ChartOfAccounts");
         }
+
+        public async Task<IActionResult> OnPostEditAsync()
+        {
+            using (var con = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var command = new SqlCommand("sp_ManageChartOfAccounts", con))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Action", "UPDATE");
+                command.Parameters.AddWithValue("@AccountId", EditAccountId);
+                command.Parameters.AddWithValue("@AccountName", AccountName);
+                command.Parameters.AddWithValue("@ParentAccountId", ParentAccountId ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@AccountType", AccountType);
+
+                await con.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return RedirectToPage("ChartOfAccounts");
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            using (var con = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            using (var command = new SqlCommand("sp_ManageChartOfAccounts", con))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@Action", "DELETE");
+                command.Parameters.AddWithValue("@AccountId", id);
+
+                await con.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+            }
+
+            return RedirectToPage("ChartOfAccounts");
+        }
+
+
     }
 }
