@@ -50,25 +50,25 @@ namespace MiniAccountManagementSystem.Pages.AccountPages
         {
             await LoadAccountsAsync();
 
-            ExistingAccounts = AllAccounts.Select(a => new AccountItem
+            if (editId != null)
             {
-                AccountId = a.AccountId,
-                AccountName = a.AccountName
-            }).ToList();
-
-            if (editId.HasValue)
-            {
-                var acc = AllAccounts.FirstOrDefault(a => a.AccountId == editId.Value);
+                var acc = AllAccounts.FirstOrDefault(x => x.AccountId == editId.Value);
                 if (acc != null)
                 {
-                    EditAccountId = acc.AccountId;
                     AccountName = acc.AccountName;
                     ParentAccountId = acc.ParentAccountId;
                     AccountType = acc.AccountType;
+                    EditAccountId = acc.AccountId;
                 }
             }
 
+            ExistingAccounts = AllAccounts.Select(x => new AccountItem
+            {
+                AccountId = x.AccountId,
+                AccountName = x.AccountName
+            }).ToList();
         }
+
 
         private async Task LoadAccountsAsync()
         {

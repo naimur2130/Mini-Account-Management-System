@@ -1,0 +1,31 @@
+﻿@page "{id:int}"
+@model MiniAccountManagementSystem.Pages.Vouchers.DetailsModel
+@{
+    ViewData["Title"] = "Voucher Details";
+}
+
+<h2>Voucher Details - ID @Model.VoucherId</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Account</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Narration</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var e in Model.Entries)
+        {
+            <tr>
+                <td>@e.AccountName</td>
+                <td>@e.DebitAmount</td>
+                <td>@e.CreditAmount</td>
+                <td>@e.Narration</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-page="Index" class="btn btn-secondary">Back to List</a>

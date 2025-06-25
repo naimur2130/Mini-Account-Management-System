@@ -38,6 +38,16 @@
                                     <i class="fa fa-list"></i> Chart of Accounts
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Vouchers/VoucherEntryPage">
+                                    <i class="fa fa-list"></i> Entry Page
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-page="/Vouchers/Index">
+                                    <i class="fa fa-list"></i> Show List
+                                </a>
+                            </li>
                         }
                         @if(User.IsInRole(SD._Accountant))
                         {
