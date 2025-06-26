@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,6 +9,7 @@ using System.Data;
 
 namespace MiniAccountManagementSystem.Pages.Vouchers
 {
+    [Authorize(Roles = "Accountant")]
     public class VoucherEntryPageModel : PageModel
     {
         private readonly IConfiguration _configuration;

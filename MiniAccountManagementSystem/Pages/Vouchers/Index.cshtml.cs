@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using System.Data;
 
 namespace MiniAccountManagementSystem.Pages.Vouchers
 {
+    [Authorize(Roles = "Admin,Accountant,Viewer")]
     public class IndexModel : PageModel
     {
         private readonly IConfiguration _configuration;
